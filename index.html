@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>硬质合金牌号推荐系统</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Microsoft YaHei", sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 6px;
+      font-size: 16px;
+      line-height: 1.4;
+      position: relative;
+    }
+
+    .container {
+      max-width: 100%;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.98);
+      padding: 12px 10px;
+      border-radius: 10px;
+      box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+      display: none; /* 默认隐藏主界面 */
+    }
+
+    .login-container {
+      max-width: 100%;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.98);
+      padding: 20px 15px;
+      border-radius: 10px;
+      box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 70vh;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 16px;
+      padding: 0 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .logo {
+      height: 60px;
+      width: auto;
+      max-width: 200px;
+      object-fit: contain;
+    }
+
+    .title-container {
+      text-align: center;
+    }
+
+    h1 {
+      color: #2c3e50;
+      font-size: 1.4em;
+      margin-bottom: 6px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      color: #7f8c8d;
+      font-size: 0.9em;
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+
+    .login-title {
+      color: #2c3e50;
+      font-size: 1.6em;
+      margin-bottom: 20px;
+      font-weight: 700;
+      text-align: center;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .login-form {
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 10px;
+      border: 1px solid #e9ecef;
+      border-radius: 5px;
+      font-size: 16px;
+      transition: all 0.2s ease;
+      background: #f8f9fa;
+      -webkit-appearance: none;
+      min-height: 48px;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #667eea;
+      background: white;
+      box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 14px 16px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      box-shadow: 0 1px 6px rgba(102, 126, 234, 0.3);
+      margin-top: 10px;
+    }
+
+    .login-btn:active {
+      transform: scale(0.98);
+      box-shadow: 0 1px 3px rgba(102, 126, 234, 0.4);
+    }
+
+    .error-message {
+      color: #e74c3c;
+      font-size: 0.9em;
+      margin-top: 10px;
+      text-align: center;
+      display: none;
+    }
+
+    .search-section {
+      background: white;
+      padding: 14px 10px;
+      border-radius: 8px;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+      margin-bottom: 14px;
+    }
+
+    .search-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .search-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 5px;
+      font-size: 0.95em;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    input {
+      padding: 12px 10px;
+      border: 1px solid #e9ecef;
+      border-radius: 5px;
+      font-size: 16px;
+      transition: all 0.2s ease;
+      background: #f8f9fa;
+      width: 100%;
+      -webkit-appearance: none;
+      min-height: 48px;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+      background: white;
+      box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+    }
+
+    .button-group {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 8px;
+      flex-direction: column;
+    }
+
+    button {
+      padding: 14px 16px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      min-height: 48px;
+    }
+
+    .search-btn {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      box-shadow: 0 1px 6px rgba(102, 126, 234, 0.3);
+    }
+
+    .search-btn:active {
+      transform: scale(0.98);
+      box-shadow: 0 1px 3px rgba(102, 126, 234, 0.4);
+    }
+
+    .clear-btn {
+      background: #95a5a6;
+      color: white;
+    }
+
+    .clear-btn:active {
+      background: #7f8c8d;
+      transform: scale(0.98);
+    }
+
+    .logout-btn {
+      background: #e74c3c;
+      color: white;
+      margin-top: 10px;
+      padding: 10px 12px;
+      font-size: 0.9em;
+      min-height: 40px;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: auto;
+      min-width: 120px;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .logout-btn:active {
+      background: #c0392b;
+      transform: scale(0.98);
+    }
+
+    .results-section {
+      background: white;
+      padding: 14px 10px;
+      border-radius: 8px;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+    }
+
+    .results-header {
+      font-size: 1.2em;
+      color: #2c3e50;
+      margin-bottom: 12px;
+      text-align: center;
+      font-weight: 600;
+      padding: 0 3px;
+    }
+
+    .result-item {
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+      padding: 16px 12px;
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      position: relative;
+    }
+
+    .rank-badge {
+      position: absolute;
+      top: -8px;
+      left: -8px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.8em;
+      color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .rank-1 {
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+    }
+
+    .rank-2 {
+      background: linear-gradient(135deg, #C0C0C0, #A0A0A0);
+    }
+
+    .rank-3 {
+      background: linear-gradient(135deg, #CD7F32, #A0522D);
+    }
+
+    .result-header {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .result-title {
+      font-size: 1.1em;
+      font-weight: 700;
+      color: #2c3e50;
+      line-height: 1.2;
+    }
+
+    .match-badge {
+      padding: 5px 8px;
+      border-radius: 10px;
+      font-size: 0.85em;
+      font-weight: 600;
+      text-align: center;
+      width: fit-content;
+    }
+
+    .perfect-match {
+      background: linear-gradient(135deg, #00b09b, #96c93d);
+      color: white;
+    }
+
+    .recommend {
+      background: linear-gradient(135deg, #ff9a9e, #fecfef);
+      color: white;
+    }
+
+    .certified {
+      background: linear-gradient(135deg, #a8c0ff, #3f4c6b);
+      color: white;
+    }
+
+    .exceed-warning {
+      background: linear-gradient(135deg, #ff6b6b, #ffa726);
+      color: white;
+    }
+
+    .property-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background: white;
+      border-radius: 5px;
+      overflow: hidden;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+      font-size: 0.9em;
+    }
+
+    .property-table th {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 8px 6px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.9em;
+      white-space: nowrap;
+    }
+
+    .property-table td {
+      padding: 6px;
+      border-bottom: 1px solid #e9ecef;
+      word-break: break-word;
+      vertical-align: top;
+      line-height: 1.3;
+    }
+
+    .property-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .property-name {
+      font-weight: 600;
+      color: #2c3e50;
+      width: 60px;
+      white-space: nowrap;
+      font-size: 0.9em;
+    }
+
+    .match-status {
+      text-align: center;
+      padding: 5px 3px;
+      border-radius: 3px;
+      font-weight: 600;
+      font-size: 0.85em;
+      min-width: 50px;
+    }
+
+    .status-match {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status-close {
+      background: #d1ecf1;
+      color: #0c5460;
+    }
+
+    .status-reference {
+      background: #e2e3e5;
+      color: #383d41;
+    }
+
+    .status-developing {
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeaa7;
+    }
+
+    .status-blank {
+      background: transparent;
+      color: transparent;
+    }
+
+    .no-match {
+      text-align: center;
+      padding: 24px 16px;
+      color: #7f8c8d;
+      font-size: 1em;
+    }
+
+    .no-match div:first-child {
+      font-size: 2em;
+      margin-bottom: 8px;
+      opacity: 0.7;
+    }
+
+    .match-summary {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.9em;
+      line-height: 1.2;
+    }
+
+    .developing-message {
+      background: linear-gradient(135deg, #ff6b6b, #ffa726);
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 1.1em;
+      line-height: 1.4;
+    }
+
+    .data-source {
+      font-size: 0.8em;
+      color: #6c757d;
+      font-style: italic;
+    }
+
+    /* 超小屏手机优化 */
+    @media (max-width: 320px) {
+      body {
+        padding: 4px;
+        font-size: 14px;
+      }
+      
+      .container, .login-container {
+        padding: 10px 8px;
+      }
+      
+      h1 {
+        font-size: 1.3em;
+      }
+      
+      .search-section,
+      .results-section {
+        padding: 12px 8px;
+      }
+      
+      input {
+        padding: 10px 8px;
+        font-size: 15px;
+        min-height: 44px;
+      }
+      
+      button {
+        padding: 12px 14px;
+        min-height: 44px;
+        font-size: 15px;
+      }
+      
+      .property-table {
+        font-size: 0.85em;
+      }
+      
+      .property-table th,
+      .property-table td {
+        padding: 5px;
+      }
+      
+      .logo {
+        height: 50px;
+      }
+      
+      .logout-btn {
+        bottom: 15px;
+        right: 15px;
+        min-width: 100px;
+        padding: 8px 10px;
+        font-size: 0.85em;
+      }
+    }
+
+    /* 小屏手机优化 */
+    @media (min-width: 321px) and (max-width: 375px) {
+      body {
+        padding: 5px;
+        font-size: 15px;
+      }
+      
+      .container, .login-container {
+        padding: 11px 9px;
+      }
+      
+      .logo {
+        height: 55px;
+      }
+      
+      .logout-btn {
+        bottom: 15px;
+        right: 15px;
+      }
+    }
+
+    /* 平板设备适配 */
+    @media (min-width: 480px) {
+      body {
+        padding: 10px;
+        font-size: 16px;
+      }
+      
+      .container, .login-container {
+        padding: 18px 14px;
+      }
+      
+      h1 {
+        font-size: 1.6em;
+      }
+      
+      .button-group {
+        flex-direction: row;
+      }
+      
+      button {
+        width: auto;
+        min-width: 120px;
+      }
+      
+      .search-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+      }
+      
+      .property-table {
+        font-size: 0.95em;
+      }
+      
+      .logo {
+        height: 65px;
+      }
+      
+      .logout-btn {
+        bottom: 20px;
+        right: 20px;
+      }
+    }
+
+    /* 桌面设备适配 */
+    @media (min-width: 768px) {
+      body {
+        padding: 12px;
+      }
+      
+      .container, .login-container {
+        max-width: 900px;
+        padding: 20px 16px;
+      }
+      
+      h1 {
+        font-size: 1.8em;
+      }
+      
+      .search-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      
+      .property-table {
+        font-size: 1em;
+      }
+      
+      .logo {
+        height: 70px;
+      }
+      
+      .logout-btn {
+        bottom: 25px;
+        right: 25px;
+      }
+    }
+
+    /* 大屏设备适配 */
+    @media (min-width: 1024px) {
+      .search-grid {
+        grid-template-columns: repeat(5, 1fr);
+      }
+      
+      .logout-btn {
+        bottom: 30px;
+        right: 30px;
+      }
+    }
+
+    /* 防止iOS缩放 */
+    input, select, textarea {
+      font-size: 16px;
+    }
+
+    /* 触摸设备优化 */
+    @media (hover: none) and (pointer: coarse) {
+      button:active {
+        transform: scale(0.96);
+      }
+      
+      .result-item:active {
+        opacity: 0.9;
+      }
+    }
+
+    /* 滚动条优化 */
+    .results {
+      max-height: 50vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .results::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .results::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 2px;
+    }
+
+    .results::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 2px;
+    }
+
+    .results::-webkit-scrollbar-thumb:hover {
+      background: #a8a8a8;
+    }
+
+    /* 表格响应式优化 */
+    @media (max-width: 480px) {
+      .property-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+      
+      .property-table th,
+      .property-table td {
+        min-width: 70px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 登录页面 -->
+  <div class="login-container" id="loginContainer">
+    <div class="logo-container">
+      <img src="logo.png" alt="公司Logo" class="logo">
+    </div>
+    <div class="login-title">🔐 销售员登录</div>
+    <div class="login-form">
+      <div class="form-group">
+        <label for="username">👤 账号</label>
+        <input type="text" id="username" placeholder="请输入账号">
+      </div>
+      <div class="form-group">
+        <label for="password">🔒 密码</label>
+        <input type="password" id="password" placeholder="请输入密码">
+      </div>
+      <button class="login-btn" onclick="login()">🚀 登录系统</button>
+      <div class="error-message" id="errorMessage">账号或密码错误，请重新输入！</div>
+    </div>
+  </div>
+
+  <!-- 主系统界面 -->
+  <div class="container" id="mainContainer">
+    <div class="header">
+      <div class="logo-container">
+        <img src="logo.png" alt="公司Logo" class="logo">
+      </div>
+      <div class="title-container">
+        <h1>🔍 硬质合金牌号推荐系统</h1>
+        <div class="subtitle">输入产品属性参数，快速匹配最适合的硬质合金牌号</div>
+      </div>
+    </div>
+
+    <div class="search-section">
+      <div class="search-grid">
+        <div class="search-group">
+          <label>📊 密度</label>
+          <input type="number" id="density" step="0.01" placeholder="输入密度">
+        </div>
+        <div class="search-group">
+          <label>💎 硬度</label>
+          <input type="number" id="hardness" step="0.1" placeholder="输入硬度">
+        </div>
+        <div class="search-group">
+          <label>🧲 矫顽磁力</label>
+          <input type="number" id="coercivity" step="0.1" placeholder="输入矫顽磁力">
+        </div>
+        <div class="search-group">
+          <label>⚡ 钴磁</label>
+          <input type="number" id="cobalt" step="0.01" placeholder="输入钴磁">
+        </div>
+        <div class="search-group">
+          <label>🛡️ 强度</label>
+          <input type="number" id="strength" step="1" placeholder="输入强度">
+        </div>
+      </div>
+      
+      <div class="button-group">
+        <button class="search-btn" onclick="search()">
+          <span>🔍 牌号及成分推荐</span>
+        </button>
+        <button class="clear-btn" onclick="clearSearch()">
+          <span>🗑️ 清空输入</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="results-section">
+      <div class="results-header">📋 推荐结果</div>
+      <div class="results" id="results">
+        <div class="no-match">
+          <div>🔍</div>
+          <div>请输入查询条件，系统将为您推荐最匹配的硬质合金牌号</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 退出登录按钮移到页面右下角 -->
+    <button class="logout-btn" onclick="logout()">🚪 退出登录</button>
+  </div>
+
+  <script>
+    // 登录验证
+    function login() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const errorMessage = document.getElementById('errorMessage');
+      
+      // 验证账号密码
+      if (username === '12345666' && password === 'jiayouchong') {
+        // 登录成功，显示主界面，隐藏登录界面
+        document.getElementById('loginContainer').style.display = 'none';
+        document.getElementById('mainContainer').style.display = 'block';
+      } else {
+        // 登录失败，显示错误信息
+        errorMessage.style.display = 'block';
+      }
+    }
+    
+    // 退出登录
+    function logout() {
+      // 显示登录界面，隐藏主界面
+      document.getElementById('loginContainer').style.display = 'flex';
+      document.getElementById('mainContainer').style.display = 'none';
+      
+      // 清空登录表单
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+      document.getElementById('errorMessage').style.display = 'none';
+      
+      // 清空搜索结果
+      clearSearch();
+    }
+    
+    // 页面加载时显示登录界面
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('loginContainer').style.display = 'flex';
+      document.getElementById('mainContainer').style.display = 'none';
+    });
+
+    // 完整的Excel数据
+    const data = [
+       // 耐磨合金事业部
+      { dept: "耐磨合金事业部", brand: "YG6A", density: 14.65, hardness: 92.6, coercivity: 24.4, cobalt: 5.25, strength: 2000, prod_density: null, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "耐磨合金事业部", brand: "YG6X", density: 14.85, hardness: 91.9, coercivity: 19.5, cobalt: 5.35, strength: 2200, prod_density: 14.85, prod_hardness: 91.7, prod_coercivity: 18.8, prod_cobalt: 5.3, prod_strength: 2200 },
+      { dept: "耐磨合金事业部", brand: "YG8K", density: 14.62, hardness: 89, coercivity: 8.8, cobalt: 7.17, strength: 2500, prod_density: 14.62, prod_hardness: 88.5, prod_coercivity: 8.6, prod_cobalt: 7.1, prod_strength: 2500 },
+      { dept: "耐磨合金事业部", brand: "YG8KX", density: 14.74, hardness: 89.8, coercivity: 10.3, cobalt: 6.53, strength: 2500, prod_density: 14.71, prod_hardness: 89.8, prod_coercivity: 10.3, prod_cobalt: 6.53, prod_strength: 2500 },
+      { dept: "耐磨合金事业部", brand: "YG9C", density: 14.5, hardness: 87.4, coercivity: 6.4, cobalt: 8.3, strength: 2500, prod_density: null, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "耐磨合金事业部", brand: "YG11C", density: 14.25, hardness: 86.4, coercivity: 5.5, cobalt: 10.4, strength: 2300, prod_density: 14.2, prod_hardness: 86.2, prod_coercivity: 5.5, prod_cobalt: 10.25, prod_strength: 2300 },
+      { dept: "耐磨合金事业部", brand: "YG15", density: 13.95, hardness: 86.8, coercivity: 7, cobalt: 13.3, strength: 2400, prod_density: 13.95, prod_hardness: 87, prod_coercivity: 7, prod_cobalt: 13, prod_strength: 2400 },
+      { dept: "耐磨合金事业部", brand: "YG18A", density: 13.64, hardness: 87.1, coercivity: 9, cobalt: 16.7, strength: 2950, prod_density: 13.6, prod_hardness: 86.9, prod_coercivity: 9, prod_cobalt: 16.3, prod_strength: 2950 },
+      { dept: "耐磨合金事业部", brand: "ZB40C", density: 13.78, hardness: 85.5, coercivity: 4.9, cobalt: 12.4, strength: 2500, prod_density: 13.77, prod_hardness: 85.5, prod_coercivity: 5, prod_cobalt: 12.4, prod_strength: 2500 },
+      { dept: "耐磨合金事业部", brand: "ZB45", density: 13.34, hardness: 84.4, coercivity: 4.5, cobalt: 16.2, strength: 2500, prod_density: 13.33, prod_hardness: 84.4, prod_coercivity: 4.4, prod_cobalt: 16.5, prod_strength: 2500 },
+      { dept: "耐磨合金事业部", brand: "ZB45A", density: 13.34, hardness: 84.4, coercivity: 4.3, cobalt: 16.5, strength: 2500, prod_density: 13.34, prod_hardness: 84.4, prod_coercivity: 4.3, prod_cobalt: 16.4, prod_strength: 2500 },
+      { dept: "耐磨合金事业部", brand: "ZB45B", density: 13.29, hardness: 84.4, coercivity: 4.5, cobalt: 16.5, strength: 2500, prod_density: 13.34, prod_hardness: 84.4, prod_coercivity: 4.5, prod_cobalt: 16.4, prod_strength: 2500 },
+      { dept: "耐磨合金事业部", brand: "ZB45C", density: 13.41, hardness: 83.1, coercivity: 3.4, cobalt: 18, strength: 2500, prod_density: 13.43, prod_hardness: 83.2, prod_coercivity: 3.5, prod_cobalt: 18.1, prod_strength: 2500 },
+      { dept: "耐磨合金事业部", brand: "ZB50C", density: 13.23, hardness: 82.4, coercivity: 3.2, cobalt: 20.05, strength: 2300, prod_density: 13.26, prod_hardness: 82.1, prod_coercivity: 3.3, prod_cobalt: 20, prod_strength: 2300 },
+      { dept: "耐磨合金事业部", brand: "ZB55C", density: 13.04, hardness: 81.4, coercivity: 2.8, cobalt: 22, strength: 2300, prod_density: 13.03, prod_hardness: 81.4, prod_coercivity: 2.8, prod_cobalt: 21.8, prod_strength: 2300 },
+      { dept: "耐磨合金事业部", brand: "ZB60N", density: 13.25, hardness: 82, coercivity: 4, cobalt: 18.2, strength: 2000, prod_density: 13.3, prod_hardness: 82.7, prod_coercivity: 4.3, prod_cobalt: 18.4, prod_strength: 2400 },
+      { dept: "耐磨合金事业部", brand: "ZB65", density: 12.96, hardness: 83.2, coercivity: 4.9, cobalt: 20.1, strength: 2400, prod_density: 12.96, prod_hardness: 83.2, prod_coercivity: 4.9, prod_cobalt: 20.1, prod_strength: 2400 },
+      { dept: "耐磨合金事业部", brand: "ZB75A", density: 13.04, hardness: 81.5, coercivity: 3.2, cobalt: 22.7, strength: 2400, prod_density: 13.04, prod_hardness: 81.5, prod_coercivity: 3.2, prod_cobalt: 21.8, prod_strength: 2400 },
+      { dept: "耐磨合金事业部", brand: "ZD30", density: 14.41, hardness: 87.3, coercivity: 5.7, cobalt: 9.3, strength: 2350, prod_density: null, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "耐磨合金事业部", brand: "ZE05", density: 14.78, hardness: 90.8, coercivity: 15.5, cobalt: 4.9, strength: 2400, prod_density: 14.78, prod_hardness: 90.8, prod_coercivity: 15, prod_cobalt: 4.9, prod_strength: 2400 },
+      { dept: "耐磨合金事业部", brand: "ZE10", density: 14.78, hardness: 90, coercivity: 12.5, cobalt: 4.6, strength: 2400, prod_density: 14.78, prod_hardness: 89.7, prod_coercivity: 10.9, prod_cobalt: 4.5, prod_strength: 2400 },
+      { dept: "耐磨合金事业部", brand: "ZE20", density: 14.88, hardness: 90, coercivity: 9.8, cobalt: 5.4, strength: 2400, prod_density: 14.87, prod_hardness: 89.5, prod_coercivity: 9, prod_cobalt: 5.3, prod_strength: 2400 },
+      { dept: "耐磨合金事业部", brand: "ZE25", density: 14.73, hardness: 88.3, coercivity: 8, cobalt: 6.7, strength: 2300, prod_density: 14.73, prod_hardness: 88.5, prod_coercivity: 8.5, prod_cobalt: 6.6, prod_strength: 2400 },
+      { dept: "耐磨合金事业部", brand: "ZK10UF", density: 14.75, hardness: 92.6, coercivity: 26, cobalt: 5.2, strength: 2000, prod_density: 14.74, prod_hardness: 92.6, prod_coercivity: 25, prod_cobalt: 5.3, prod_strength: 2000 },
+      { dept: "耐磨合金事业部", brand: "ZK10UF-1", density: 14.85, hardness: 91.6, coercivity: 16, cobalt: 5.5, strength: 2100, prod_density: null, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "耐磨合金事业部", brand: "ZK20", density: 14.85, hardness: 90.6, coercivity: 13, cobalt: 5.35, strength: 2300, prod_density: 14.85, prod_hardness: 90.5, prod_coercivity: 12.5, prod_cobalt: 5.3, prod_strength: 2300 },
+      { dept: "耐磨合金事业部", brand: "ZK30", density: 14.65, hardness: 89.7, coercivity: 11.2, cobalt: 7.2, strength: 2300, prod_density: 14.65, prod_hardness: 89.5, prod_coercivity: 11, prod_cobalt: 7.11, prod_strength: 2300 },
+      { dept: "耐磨合金事业部", brand: "ZK30UF", density: 14.33, hardness: 91.4, coercivity: 18.5, cobalt: 9.25, strength: 2400, prod_density: 14.32, prod_hardness: 91.2, prod_coercivity: 18, prod_cobalt: 8.8, prod_strength: 2500 },
+      { dept: "耐磨合金事业部", brand: "ZL20", density: 14.75, hardness: 89.2, coercivity: 10, cobalt: 5.9, strength: 2300, prod_density: 14.75, prod_hardness: 89.2, prod_coercivity: 10, prod_cobalt: 5.9, prod_strength: 2300 },
+      { dept: "耐磨合金事业部", brand: "ZL35", density: 14.35, hardness: 88.5, coercivity: 9.5, cobalt: 9.9, strength: 2400, prod_density: 14.34, prod_hardness: 88.5, prod_coercivity: 9, prod_cobalt: 9.6, prod_strength: 2400 },
+      { dept: "耐磨合金事业部", brand: "ZL35.1", density: 13.9, hardness: 86, coercivity: 7.5, cobalt: 13.5, strength: 1400, prod_density: 13.9, prod_hardness: 86, prod_coercivity: 7, prod_cobalt: 13.4, prod_strength: 2400 },
+      { dept: "耐磨合金事业部", brand: "ZL50A", density: 13.83, hardness: 87.6, coercivity: 7.6, cobalt: 12.5, strength: 3200, prod_density: 13.77, prod_hardness: 87.4, prod_coercivity: 7.3, prod_cobalt: 12.4, prod_strength: 3200 },
+      { dept: "耐磨合金事业部", brand: "ZR20", density: 14.15, hardness: 88.9, coercivity: 9, cobalt: 9.7, strength: 2850, prod_density: 14.15, prod_hardness: 88.9, prod_coercivity: 8.9, prod_cobalt: 9.9, prod_strength: 2850 },
+      { dept: "耐磨合金事业部", brand: "ZR30", density: 14.1, hardness: 90, coercivity: 87.7, cobalt: 10.6, strength: 3000, prod_density: 14.1, prod_hardness: 89.9, prod_coercivity: 14.8, prod_cobalt: 10.5, prod_strength: 3000 },
+      { dept: "耐磨合金事业部", brand: "ZR50", density: 13.83, hardness: 87.7, coercivity: 7.6, cobalt: 12.5, strength: 3200, prod_density: 13.83, prod_hardness: 87.7, prod_coercivity: 7.4, prod_cobalt: 12.5, prod_strength: 3200 },
+      { dept: "耐磨合金事业部", brand: "ZS30", density: 14.65, hardness: 90.6, coercivity: 12.8, cobalt: 7.2, strength: 2300, prod_density: 14.64, prod_hardness: 90.5, prod_coercivity: 12.5, prod_cobalt: 7.2, prod_strength: 2300 },
+      { dept: "耐磨合金事业部", brand: "YG6Z", density: 14.6, hardness: 90.2, coercivity: 11, cobalt: 5.2, strength: 2000, prod_density: 14.6, prod_hardness: 90, prod_coercivity: 10.5, prod_cobalt: 5.2, prod_strength: 2000 },
+      { dept: "耐磨合金事业部", brand: "YG8Z", density: 14.59, hardness: 88.5, coercivity: 7, cobalt: 6.9, strength: 2450, prod_density: 14.45, prod_hardness: 88.5, prod_coercivity: 7, prod_cobalt: 7, prod_strength: 2450 },
+      { dept: "耐磨合金事业部", brand: "YG10CB", density: 14.2, hardness: 86.5, coercivity: 6, cobalt: 10.2, strength: 2450, prod_density: 14.15, prod_hardness: 86.5, prod_coercivity: 5.5, prod_cobalt: 10.15, prod_strength: 2300 },
+      { dept: "耐磨合金事业部", brand: "ZB19C", density: 12.9, hardness: 79, coercivity: null, cobalt: 16.5, strength: null, prod_density: 12.8, prod_hardness: 79, prod_coercivity: 2.5, prod_cobalt: null, prod_strength: null },
+      { dept: "耐磨合金事业部", brand: "ZB20C", density: 13.3, hardness: 82, coercivity: 3, cobalt: 16.5, strength: 2000, prod_density: 13.33, prod_hardness: 82, prod_coercivity: 3, prod_cobalt: 17, prod_strength: 2000 },
+      { dept: "耐磨合金事业部", brand: "ZB22C", density: 13.13, hardness: 81.5, coercivity: 2.5, cobalt: 18.5, strength: 2100, prod_density: 13.2, prod_hardness: 81.8, prod_coercivity: 2.5, prod_cobalt: 19, prod_strength: 2000 },
+      { dept: "耐磨合金事业部", brand: "ZL10A", density: 14.3, hardness: 91.3, coercivity: 16, cobalt: 7, strength: 2200, prod_density: 14.3, prod_hardness: 91.3, prod_coercivity: 16, prod_cobalt: 8, prod_strength: 2200 },
+      { dept: "耐磨合金事业部", brand: "ZL10B", density: 14.45, hardness: 91.7, coercivity: 19, cobalt: 6, strength: 2300, prod_density: 14.45, prod_hardness: 91.7, prod_coercivity: 20, prod_cobalt: 6, prod_strength: 2300 },
+      { dept: "耐磨合金事业部", brand: "ZL10.3B", density: 14.5, hardness: 91.7, coercivity: 21, cobalt: 4.7, strength: 2300, prod_density: 14.5, prod_hardness: 91.7, prod_coercivity: 21, prod_cobalt: 4.7, prod_strength: 2300 },
+      { dept: "耐磨合金事业部", brand: "YG6Q", density: null, hardness: null, coercivity: null, cobalt: null, strength: null, prod_density: null, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "耐磨合金事业部", brand: "YG12Q", density: 14.15, hardness: 83, coercivity: 2.5, cobalt: 10.6, strength: null, prod_density: null, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+
+      // 精密零件事业部
+      { dept: "精密零件事业部", brand: "YG9CA", density: 14.5, hardness: 0, coercivity: 6.6, cobalt: 8.5, strength: 2300, prod_density: 14.5, prod_hardness: 88, prod_coercivity: 6, prod_cobalt: 89, prod_strength: 2300 },
+      { dept: "精密零件事业部", brand: "YG11M", density: 14.29, hardness: 89.2, coercivity: 10.7, cobalt: 10.3, strength: 2413, prod_density: 14.29, prod_hardness: 89.4, prod_coercivity: 10.5, prod_cobalt: 90, prod_strength: 2413 },
+      { dept: "精密零件事业部", brand: "ZK10UF", density: 14.75, hardness: 93, coercivity: 26.3, cobalt: 5.4, strength: 2000, prod_density: null, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "精密零件事业部", brand: "ZK10UF-1", density: 14.85, hardness: 91.6, coercivity: 16, cobalt: 5.5, strength: 2100, prod_density: 14.85, prod_hardness: 91.4, prod_coercivity: 15.5, prod_cobalt: 89, prod_strength: 2100 },
+      { dept: "精密零件事业部", brand: "ZK10UF-H", density: 14.79, hardness: 92.6, coercivity: 24.5, cobalt: 5.1, strength: 2400, prod_density: 14.79, prod_hardness: 92.6, prod_coercivity: 24, prod_cobalt: 4.92, prod_strength: 2400 },
+      { dept: "精密零件事业部", brand: "ZK20", density: 14.84, hardness: 90.7, coercivity: 13.1, cobalt: 5.35, strength: 2150, prod_density: 14.85, prod_hardness: 90.4, prod_coercivity: 12.5, prod_cobalt: 5.22, prod_strength: 2150 },
+      { dept: "精密零件事业部", brand: "ZK30", density: 14.64, hardness: 89.9, coercivity: 11, cobalt: 7.4, strength: 2300, prod_density: 14.65, prod_hardness: 89.4, prod_coercivity: 10, prod_cobalt: 7.24, prod_strength: 2300 },
+      { dept: "精密零件事业部", brand: "ZK30UF", density: 14.32, hardness: 91.4, coercivity: 18.2, cobalt: 9.3, strength: 2500, prod_density: 14.33, prod_hardness: 91.2, prod_coercivity: 18, prod_cobalt: 8.7, prod_strength: 2500 },
+      { dept: "精密零件事业部", brand: "ZK35.5", density: 14.48, hardness: 86.6, coercivity: 6.5, cobalt: 6.2, strength: 2700, prod_density: null, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "精密零件事业部", brand: "ZN106G", density: 14.93, hardness: 90.5, coercivity: null, cobalt: null, strength: 2100, prod_density: 14.92, prod_hardness: 89.9, prod_coercivity: null, prod_cobalt: null, prod_strength: 2100 },
+      { dept: "精密零件事业部", brand: "ZN106G-1", density: 14.82, hardness: 92.9, coercivity: null, cobalt: null, strength: 2150, prod_density: 14.8, prod_hardness: 92.9, prod_coercivity: null, prod_cobalt: null, prod_strength: 2150 },
+      { dept: "精密零件事业部", brand: "ZN109G", density: 14.52, hardness: 89.5, coercivity: null, cobalt: null, strength: 2400, prod_density: 14.45, prod_hardness: 89.5, prod_coercivity: null, prod_cobalt: null, prod_strength: 2400 },
+      { dept: "精密零件事业部", brand: "ZN211G", density: 14.3, hardness: 87.5, coercivity: 8, cobalt: null, strength: 2760, prod_density: 14.3, prod_hardness: 87.2, prod_coercivity: 8, prod_cobalt: null, prod_strength: 2760 },
+      { dept: "精密零件事业部", brand: "ZN209G", density: 14.45, hardness: 86.8, coercivity: null, cobalt: null, strength: 2400, prod_density: 14.46, prod_hardness: 86.4, prod_coercivity: null, prod_cobalt: null, prod_strength: 2400 },
+      { dept: "精密零件事业部", brand: "ZL13Q", density: 14.1, hardness: 88, coercivity: 8, cobalt: 11.8, strength: 2900, prod_density: 14.1, prod_hardness: 88, prod_coercivity: 8.5, prod_cobalt: 11.8, prod_strength: 2900 },
+      { dept: "精密零件事业部", brand: "ZLT10", density: 8.96, hardness: 89, coercivity: null, cobalt: null, strength: 1400, prod_density: 8.96, prod_hardness: 89, prod_coercivity: null, prod_cobalt: null, prod_strength: 1400 },
+      { dept: "精密零件事业部", brand: "YG8E", density: 14.4, hardness: 89, coercivity: 9, cobalt: "≥6.60", strength: 1900, prod_density: 14.4, prod_hardness: 89, prod_coercivity: 9, prod_cobalt: 83, prod_strength: 1900 },
+      { dept: "精密零件事业部", brand: "ZN210G", density: 14.3, hardness: 89.5, coercivity: 11, cobalt: "≥3.80", strength: 2200, prod_density: 14.3, prod_hardness: 88, prod_coercivity: 10, prod_cobalt: 3.5, prod_strength: 2200 },
+
+      // 采掘合金事业部
+      { dept: "采掘合金事业部", brand: "YG8C", density: 14.6, hardness: 87.9, coercivity: 6.4, cobalt: 7.75, strength: 2400, prod_density: 14.61, prod_hardness: 87.6, prod_coercivity: 6.3, prod_cobalt: 7.65, prod_strength: 2400 },
+      { dept: "采掘合金事业部", brand: "YG8K", density: 14.65, hardness: 88.9, coercivity: 8, cobalt: 7.3, strength: 2400, prod_density: 14.66, prod_hardness: 88.5, prod_coercivity: 8.6, prod_cobalt: 7.22, prod_strength: 2400 },
+      { dept: "采掘合金事业部", brand: "YG9C", density: 14.5, hardness: 87.4, coercivity: 6.4, cobalt: 8.3, strength: 2500, prod_density: 14.51, prod_hardness: 87.4, prod_coercivity: 6, prod_cobalt: 8.37, prod_strength: 2500 },
+      { dept: "采掘合金事业部", brand: "YG11C", density: 14.27, hardness: 86.4, coercivity: 5, cobalt: 10.6, strength: 2400, prod_density: 14.28, prod_hardness: 86.2, prod_coercivity: 5.6, prod_cobalt: 10.45, prod_strength: 2400 },
+      { dept: "采掘合金事业部", brand: "YG15C", density: 13.93, hardness: 85, coercivity: 4.5, cobalt: 14.1, strength: 2350, prod_density: 13.93, prod_hardness: 85, prod_coercivity: 4.5, prod_cobalt: 13.82, prod_strength: 2350 },
+      { dept: "采掘合金事业部", brand: "YG15", density: 13.98, hardness: 87, coercivity: 7, cobalt: 13.3, strength: 2800, prod_density: 13.98, prod_hardness: 87, prod_coercivity: 7, prod_cobalt: 13.23, prod_strength: 2800 },
+      { dept: "采掘合金事业部", brand: "YG18", density: 13.65, hardness: 86.6, coercivity: 6.8, cobalt: 16.2, strength: 3000, prod_density: 13.66, prod_hardness: 86.6, prod_coercivity: 6.8, prod_cobalt: 16.14, prod_strength: 3000 },
+      { dept: "采掘合金事业部", brand: "YG20", density: 13.43, hardness: 86.2, coercivity: 8.5, cobalt: 18.3, strength: 3000, prod_density: 13.44, prod_hardness: 86.2, prod_coercivity: 8.6, prod_cobalt: 18.3, prod_strength: 3000 },
+      { dept: "采掘合金事业部", brand: "ZD10", density: 14.88, hardness: 89.7, coercivity: 10.8, cobalt: 5.45, strength: 2600, prod_density: 14.88, prod_hardness: 89.5, prod_coercivity: 9.8, prod_cobalt: 5.4, prod_strength: 2600 },
+      { dept: "采掘合金事业部", brand: "ZD10T", density: 14.85, hardness: 86.8, coercivity: 5, cobalt: 5.65, strength: 2000, prod_density: 14.85, prod_hardness: 86.8, prod_coercivity: 4.8, prod_cobalt: 5.58, prod_strength: 2000 },
+      { dept: "采掘合金事业部", brand: "ZD15", density: 14.7, hardness: 89, coercivity: 8, cobalt: 6.76, strength: 2300, prod_density: 14.72, prod_hardness: 89, prod_coercivity: 8, prod_cobalt: 6.75, prod_strength: 2300 },
+      { dept: "采掘合金事业部", brand: "ZD30", density: 14.41, hardness: 87.3, coercivity: 6, cobalt: 9.3, strength: 2500, prod_density: 14.42, prod_hardness: 87, prod_coercivity: 5.8, prod_cobalt: 9.28, prod_strength: 2500 },
+      { dept: "采掘合金事业部", brand: "ZD30A", density: 14.4, hardness: 88, coercivity: 6.8, cobalt: 9, strength: 2850, prod_density: 14.4, prod_hardness: 88, prod_coercivity: 6.8, prod_cobalt: 9, prod_strength: 2850 },
+      { dept: "采掘合金事业部", brand: "ZD30T", density: 14.4, hardness: 85.2, coercivity: 3, cobalt: 9.1, strength: 2200, prod_density: 14.41, prod_hardness: 85.2, prod_coercivity: 3, prod_cobalt: 9, prod_strength: 2200 },
+      { dept: "采掘合金事业部", brand: "ZD35A", density: 14.29, hardness: 87, coercivity: 6.2, cobalt: 10.4, strength: 2900, prod_density: 14.29, prod_hardness: 87, prod_coercivity: 6, prod_cobalt: 10.35, prod_strength: 2900 },
+      { dept: "采掘合金事业部", brand: "ZD40", density: 14.1, hardness: 86.7, coercivity: 5.2, cobalt: 12.15, strength: 2900, prod_density: 14.1, prod_hardness: 86.5, prod_coercivity: 5.2, prod_cobalt: 12.1, prod_strength: 2900 },
+      { dept: "采掘合金事业部", brand: "ZD40T", density: 14.2, hardness: 84, coercivity: 2.5, cobalt: 10.9, strength: 2000, prod_density: 14.2, prod_hardness: 84, prod_coercivity: 2.5, prod_cobalt: 10.9, prod_strength: 2000 },
+      { dept: "采掘合金事业部", brand: "ZD45", density: 13.85, hardness: 86.2, coercivity: 5.7, cobalt: 14.4, strength: 2950, prod_density: 13.84, prod_hardness: 86, prod_coercivity: 5.4, prod_cobalt: 14.4, prod_strength: 2950 },
+      { dept: "采掘合金事业部", brand: "ZD45.1", density: 13.95, hardness: 87.8, coercivity: 8.5, cobalt: 13.3, strength: 2950, prod_density: 13.96, prod_hardness: 87.4, prod_coercivity: 8, prod_cobalt: 13.25, prod_strength: 2950 },
+      { dept: "采掘合金事业部", brand: "ZD45.3", density: 13.95, hardness: 85.7, coercivity: 5, cobalt: 13.6, strength: 2900, prod_density: 13.95, prod_hardness: 85.5, prod_coercivity: 5, prod_cobalt: 13.6, prod_strength: 2900 },
+      { dept: "采掘合金事业部", brand: "YG6KA", density: 14.85, hardness: 89, coercivity: 9.5, cobalt: 5.45, strength: 2400, prod_density: 14.89, prod_hardness: 89, prod_coercivity: 8.5, prod_cobalt: 5.4, prod_strength: 2200 },
+      { dept: "采掘合金事业部", brand: "YG8Z", density: 14.45, hardness: 88.7, coercivity: 7.6, cobalt: 7.25, strength: 2450, prod_density: 14.45, prod_hardness: 88.3, prod_coercivity: 7, prod_cobalt: 7.15, prod_strength: 2450 },
+      { dept: "采掘合金事业部", brand: "ZD35K", density: 14.2, hardness: 86, coercivity: 5, cobalt: 9.8, strength: 2500, prod_density: 14.2, prod_hardness: 86, prod_coercivity: 5, prod_cobalt: 9.76, prod_strength: 2300 },
+      { dept: "采掘合金事业部", brand: "ZG30C", density: 14.2, hardness: 85.5, coercivity: 4.5, cobalt: 8.2, strength: 2000, prod_density: 14.2, prod_hardness: 85.5, prod_coercivity: 4.5, prod_cobalt: 8.2, prod_strength: 2000 },
+
+      // 大制品事业部
+      { dept: "大制品事业部", brand: "ZY27", density: 12.6, hardness: 76.2, coercivity: 1.6, cobalt: 14, strength: 2000, prod_density: 12.53, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZY28", density: 13.02, hardness: 78.5, coercivity: 2.6, cobalt: 11.5, strength: 2200, prod_density: 12.95, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZY29", density: 13.3, hardness: 80, coercivity: 2.5, cobalt: 10, strength: 2350, prod_density: 13.22, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZY30", density: 13.43, hardness: 81, coercivity: 3, cobalt: 8, strength: 2350, prod_density: 13.38, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZY31", density: 13.6, hardness: 82, coercivity: 3.5, cobalt: 7, strength: 2350, prod_density: 13.55, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZY32", density: 13.77, hardness: 83, coercivity: 4, cobalt: 6.5, strength: 2300, prod_density: 13.73, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZY33", density: 13.92, hardness: 83.5, coercivity: 4, cobalt: 5.5, strength: 2300, prod_density: 13.87, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZY34", density: 14.12, hardness: 84.5, coercivity: 5, cobalt: 6, strength: 2300, prod_density: 14.08, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZY35", density: 14.42, hardness: 86, coercivity: 7, cobalt: 4, strength: 2300, prod_density: 14.35, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZY36", density: 14.63, hardness: 87, coercivity: 7, cobalt: 4, strength: 2300, prod_density: 14.59, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZY37", density: 14.85, hardness: 87, coercivity: 8, cobalt: 3, strength: 2000, prod_density: 14.74, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZY27A", density: 12.6, hardness: 78.5, coercivity: 2, cobalt: 26.5, strength: 2000, prod_density: 12.56, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZY28A", density: 12.97, hardness: 81, coercivity: 3.5, cobalt: 22.5, strength: 2400, prod_density: 12.93, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZY29A", density: 13.3, hardness: 82, coercivity: 3.5, cobalt: 15.5, strength: 2350, prod_density: 13.25, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZY30A", density: 13.45, hardness: 83, coercivity: 3.5, cobalt: 14, strength: 2400, prod_density: 13.4, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZY31A", density: 13.6, hardness: 83, coercivity: 4.5, cobalt: 12, strength: 2400, prod_density: 13.56, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZY32A", density: 13.78, hardness: 84.2, coercivity: 4.5, cobalt: 10, strength: 2400, prod_density: 13.73, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZY33A", density: 13.92, hardness: 84.5, coercivity: 4.5, cobalt: 10, strength: 2400, prod_density: 13.8, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZY34A", density: 14.12, hardness: 85, coercivity: 4.5, cobalt: 10.2, strength: 2400, prod_density: 14.1, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZY35A", density: 14.44, hardness: 86, coercivity: 5, cobalt: 7, strength: 2400, prod_density: 14.38, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZY36A", density: 14.64, hardness: 87, coercivity: 5.5, cobalt: 5.5, strength: 2000, prod_density: 14.59, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZY37A", density: 14.85, hardness: 88, coercivity: 7.5, cobalt: 4, strength: 2000, prod_density: 14.79, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZYB23HB", density: 12.47, hardness: 78, coercivity: 2.5, cobalt: 19.5, strength: 2000, prod_density: 12.41, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZYB27HA", density: 12.6, hardness: 76, coercivity: 2.2, cobalt: 13.5, strength: 2200, prod_density: 12.53, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZYB27HB", density: 12.6, hardness: 78, coercivity: 2.5, cobalt: 18, strength: 2200, prod_density: 12.53, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZYB28HB", density: 13.02, hardness: 80, coercivity: 3.5, cobalt: 15, strength: 2200, prod_density: 12.95, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZYB29HB", density: 13.3, hardness: 81.5, coercivity: 3.5, cobalt: 13, strength: 2350, prod_density: 13.25, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZYB30HB", density: 13.43, hardness: 82.5, coercivity: 4, cobalt: 11, strength: 2350, prod_density: 13.41, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZYB31HB", density: 13.6, hardness: 83, coercivity: 4.5, cobalt: 10, strength: 2350, prod_density: 13.55, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZYB32HB", density: 13.75, hardness: 83.5, coercivity: 4.5, cobalt: 9, strength: 2350, prod_density: 13.73, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZYB33HB", density: 13.92, hardness: 84.5, coercivity: 5, cobalt: 8, strength: 2300, prod_density: 13.87, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZYB37HB", density: 14.85, hardness: 89, coercivity: 8.5, cobalt: 2.5, strength: 2000, prod_density: 14.79, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZY36N", density: 14.55, hardness: 88.5, coercivity: 10.5, cobalt: 4, strength: 2000, prod_density: 14.51, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZN120", density: 13.25, hardness: 81.5, coercivity: null, cobalt: null, strength: 2400, prod_density: 13.23, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "大制品事业部", brand: "ZLT30", density: 6.4, hardness: 83, coercivity: null, cobalt: null, strength: 1500, prod_density: 12.6, prod_hardness: 92.5, prod_coercivity: null, prod_cobalt: null, prod_strength: 1500 },
+      { dept: "大制品事业部", brand: "ZYT40", density: 12.6, hardness: 92.5, coercivity: null, cobalt: null, strength: 1500, prod_density: 6.4, prod_hardness: 83, prod_coercivity: null, prod_cobalt: null, prod_strength: 1500 },
+
+      // 型材事业部
+      { dept: "型材事业部", brand: "YG6X", density: 14.87, hardness: 91.7, coercivity: 18.5, cobalt: 5, strength: 2300, prod_density: null, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "型材事业部", brand: "YG6-1", density: 13.9, hardness: 87, coercivity: null, cobalt: null, strength: null, prod_density: null, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "型材事业部", brand: "YG15", density: 13.95, hardness: 87.5, coercivity: 7, cobalt: 12, strength: 2300, prod_density: null, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "型材事业部", brand: "YG18", density: 13.6, hardness: 86, coercivity: 6, cobalt: 13.5, strength: 2300, prod_density: null, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "型材事业部", brand: "ZK20(YG6)", density: 14.85, hardness: 90.5, coercivity: 12.5, cobalt: 5, strength: 1720, prod_density: null, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "型材事业部", brand: "ZK30(YG8)", density: 14.62, hardness: 89.6, coercivity: 10, cobalt: 6.4, strength: 1800, prod_density: null, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "型材事业部", brand: "ZK11UF", density: 14.75, hardness: 92.6, coercivity: 24.4, cobalt: 5, strength: 2300, prod_density: null, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "型材事业部", brand: "ZK10UF-1", density: 14.83, hardness: 91.4, coercivity: 15.8, cobalt: 5.2, strength: 2000, prod_density: null, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "型材事业部", brand: "ZK20UF", density: 14.53, hardness: 92, coercivity: 21.5, cobalt: 6.4, strength: 2200, prod_density: null, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "型材事业部", brand: "ZK31UF（ZK30UF)", density: 14.35, hardness: 91.2, coercivity: 18.1, cobalt: 7.8, strength: 3300, prod_density: null, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "型材事业部", brand: "EK30U", density: 14.35, hardness: 91.4, coercivity: 18.2, cobalt: 7.8, strength: 3000, prod_density: null, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "型材事业部", brand: "ZK10SF", density: 14.65, hardness: 93.5, coercivity: 33.5, cobalt: 4.9, strength: 2000, prod_density: null, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "型材事业部", brand: "ZK20SF", density: 14.45, hardness: 93, coercivity: 31, cobalt: 6.1, strength: 3000, prod_density: null, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "型材事业部", brand: "ZK30SF", density: 14.15, hardness: 92, coercivity: 27, cobalt: 7.9, strength: 3000, prod_density: null, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "型材事业部", brand: "ZK40SF", density: 14.05, hardness: 91.8, coercivity: 25, cobalt: 9.5, strength: 3400, prod_density: null, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "型材事业部", brand: "EK40S", density: 14.05, hardness: 91.5, coercivity: 23.7, cobalt: 9.5, strength: 3200, prod_density: null, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "型材事业部", brand: "ZK45SF", density: 14.05, hardness: 91.8, coercivity: 23.5, cobalt: 8.5, strength: 3000, prod_density: null, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null },
+      { dept: "型材事业部", brand: "AS30", density: 14, hardness: 88.7, coercivity: null, cobalt: 8.2, strength: 2300, prod_density: null, prod_hardness: null, prod_coercivity: null, prod_cobalt: null, prod_strength: null }
+    ];
+
+    // 计算两个数值之间的绝对差
+    function diff(a, b) {
+      if (a === null || b === null) return Infinity;
+      return Math.abs(a - b);
+    }
+
+    // 检查是否在10%范围内
+    function withinTolerance(input, reference, tolerancePercent = 10) {
+      if (input === null || reference === null) return false;
+      if (reference === 0) return false; // 避免除以零
+      const tolerance = Math.abs(reference * tolerancePercent / 100);
+      return Math.abs(input - reference) <= tolerance;
+    }
+
+    // 检查是否超出或低于匹配值的合理范围
+    function checkDevelopingCondition(input, matchValue) {
+      if (input === null || matchValue === null) return false;
+      // 当输入值高于匹配值2倍或低于匹配值一半时，显示"系统正在研发"
+      return input > matchValue * 2 || input < matchValue / 2;
+    }
+
+    // 获取所有数据的参考范围
+    function getReferenceRanges() {
+      const ranges = {
+        density: { min: Infinity, max: -Infinity },
+        hardness: { min: Infinity, max: -Infinity },
+        coercivity: { min: Infinity, max: -Infinity },
+        cobalt: { min: Infinity, max: -Infinity },
+        strength: { min: Infinity, max: -Infinity }
+      };
+
+      data.forEach(item => {
+        const values = [
+          item.prod_density !== null ? item.prod_density : item.density,
+          item.prod_hardness !== null ? item.prod_hardness : item.hardness,
+          item.prod_coercivity !== null ? item.prod_coercivity : item.coercivity,
+          item.prod_cobalt !== null ? item.prod_cobalt : item.cobalt,
+          item.prod_strength !== null ? item.prod_strength : item.strength
+        ];
+
+        const properties = ['density', 'hardness', 'coercivity', 'cobalt', 'strength'];
+        
+        properties.forEach((prop, index) => {
+          if (values[index] !== null) {
+            ranges[prop].min = Math.min(ranges[prop].min, values[index]);
+            ranges[prop].max = Math.max(ranges[prop].max, values[index]);
+          }
+        });
+      });
+
+      return ranges;
+    }
+
+    // 清空搜索框
+    function clearSearch() {
+      document.getElementById('density').value = '';
+      document.getElementById('hardness').value = '';
+      document.getElementById('coercivity').value = '';
+      document.getElementById('cobalt').value = '';
+      document.getElementById('strength').value = '';
+      document.getElementById('results').innerHTML = `
+        <div class="no-match">
+          <div>🔍</div>
+          <div>请输入查询条件，系统将为您推荐最匹配的硬质合金牌号</div>
+        </div>
+      `;
+    }
+
+    // 搜索函数
+    function search() {
+      const density = parseFloat(document.getElementById('density').value) || null;
+      const hardness = parseFloat(document.getElementById('hardness').value) || null;
+      const coercivity = parseFloat(document.getElementById('coercivity').value) || null;
+      const cobalt = parseFloat(document.getElementById('cobalt').value) || null;
+      const strength = parseFloat(document.getElementById('strength').value) || null;
+
+      const inputs = [density, hardness, coercivity, cobalt, strength];
+      const inputCount = inputs.filter(v => v !== null).length;
+
+      // 如果没有输入任何值，显示提示
+      if (inputCount === 0) {
+        document.getElementById('results').innerHTML = `
+          <div class="no-match">
+            <div>⚠️</div>
+            <div>请输入至少一个搜索条件</div>
+          </div>
+        `;
+        return;
+      }
+
+      let candidates = [];
+      const referenceRanges = getReferenceRanges();
+
+      // 计算每个项目的匹配度
+      data.forEach(item => {
+        const prod_density = item.prod_density !== null ? item.prod_density : item.density;
+        const prod_hardness = item.prod_hardness !== null ? item.prod_hardness : item.hardness;
+        const prod_coercivity = item.prod_coercivity !== null ? item.prod_coercivity : item.coercivity;
+        const prod_cobalt = item.prod_cobalt !== null ? item.prod_cobalt : item.cobalt;
+        const prod_strength = item.prod_strength !== null ? item.prod_strength : item.strength;
+
+        const values = [prod_density, prod_hardness, prod_coercivity, prod_cobalt, prod_strength];
+        
+        // 计算每个属性的差异
+        const diffs = inputs.map((input, index) => 
+          input !== null && values[index] !== null ? diff(input, values[index]) : Infinity
+        );
+
+        // 检查是否有属性超出或低于合理范围
+        const developingFlags = inputs.map((input, index) => {
+          return checkDevelopingCondition(input, values[index]);
+        });
+
+        // 检查每个属性是否在10%范围内
+        const toleranceFlags = inputs.map((input, index) => {
+          return input !== null && values[index] !== null ? withinTolerance(input, values[index], 10) : false;
+        });
+
+        const hasDeveloping = developingFlags.some(flag => flag);
+        const developingCount = developingFlags.filter(flag => flag).length;
+
+        // 计算总差异
+        const totalDiff = diffs.reduce((sum, diff) => 
+          sum + (diff !== Infinity ? diff : 1000), 0
+        );
+
+        // 计算匹配数量
+        const matchCount = diffs.filter(diff => diff === 0).length;
+
+        // 计算接近数量
+        const closeCount = toleranceFlags.filter(flag => flag).length - matchCount;
+
+        // 计算参考数量
+        const referenceCount = inputs.filter((input, index) => 
+          input !== null && values[index] !== null && 
+          !developingFlags[index] && 
+          !toleranceFlags[index] && 
+          input !== values[index]
+        ).length;
+
+        // 检查是否完全匹配
+        const isPerfectMatch = inputs.every((input, index) => 
+          input === null || (values[index] !== null && input === values[index])
+        );
+
+        // 计算匹配分数 - 用于分组
+        const matchScore = (matchCount * 100) + (closeCount * 10) + (5 - referenceCount) - (totalDiff / 1000);
+
+        candidates.push({
+          ...item,
+          matchCount,
+          closeCount,
+          referenceCount,
+          totalDiff,
+          isPerfectMatch,
+          hasDeveloping,
+          developingCount,
+          developingFlags,
+          toleranceFlags,
+          matchScore,
+          diffs, // 保存每个属性的差异值
+          values, // 保存匹配值
+          isUsingCertified: item.prod_density === null || item.prod_hardness === null || 
+                           item.prod_coercivity === null || item.prod_cobalt === null || 
+                           item.prod_strength === null
+        });
+      });
+
+      // 排序候选项目
+      candidates.sort((a, b) => {
+        if (a.isPerfectMatch && !b.isPerfectMatch) return -1;
+        if (!a.isPerfectMatch && b.isPerfectMatch) return 1;
+        
+        if (b.matchCount !== a.matchCount) {
+          return b.matchCount - a.matchCount;
+        }
+        
+        if ((b.matchCount + b.closeCount) !== (a.matchCount + a.closeCount)) {
+          return (b.matchCount + b.closeCount) - (a.matchCount + a.closeCount);
+        }
+        
+        return a.totalDiff - b.totalDiff;
+      });
+
+      // 选择最佳匹配 - 现在选择前三个
+      const topMatches = candidates.slice(0, 3);
+
+      // 检查是否有开发中的情况
+      const hasAnyDeveloping = topMatches.some(match => match.hasDeveloping);
+      
+      if (hasAnyDeveloping) {
+        // 如果有开发中的情况，只显示开发信息
+        const developingDiv = document.createElement('div');
+        developingDiv.className = 'developing-message';
+        developingDiv.innerHTML = `
+          <div style="font-size: 1.5em; margin-bottom: 10px;">🚧</div>
+          <div>无现有牌号，正在研发</div>
+        `;
+        document.getElementById('results').innerHTML = '';
+        document.getElementById('results').appendChild(developingDiv);
+        return;
+      }
+
+      displayResults(topMatches, inputs, referenceRanges);
+    }
+
+    // 显示多个结果
+    function displayResults(matches, inputs, referenceRanges) {
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';
+
+      if (!matches || matches.length === 0) {
+        resultsDiv.innerHTML = `
+          <div class="no-match">
+            <div>❌</div>
+            <div>未找到匹配的牌号</div>
+          </div>
+        `;
+        return;
+      }
+
+      // 按匹配程度分组，但进一步细分
+      const groupedMatches = refinedGroupMatches(matches, inputs);
+      
+      // 添加结果数量提示
+      const resultsCount = document.createElement('div');
+      resultsCount.className = 'match-summary';
+      resultsCount.textContent = `为您推荐 ${matches.length} 个最匹配的牌号`;
+      resultsDiv.appendChild(resultsCount);
+
+      // 显示每个匹配结果
+      let currentRank = 1;
+      let lastGroupKey = null;
+      
+      groupedMatches.forEach((group, groupIndex) => {
+        // 如果组内只有一个项目，直接显示
+        if (group.length === 1) {
+          const item = group[0];
+          const resultDiv = createResultDiv(item, inputs, currentRank);
+          resultsDiv.appendChild(resultDiv);
+          
+          // 记录当前组的键值
+          lastGroupKey = getGroupKey(item, inputs);
+          currentRank++;
+        } else {
+          // 如果组内有多个项目，检查它们是否可以进一步区分
+          const furtherGrouped = furtherGroupMatches(group, inputs);
+          
+          furtherGrouped.forEach((subgroup, subgroupIndex) => {
+            const isSameRank = (subgroupIndex === 0) ? false : 
+                             areGroupsEqual(subgroup, furtherGrouped[subgroupIndex-1], inputs);
+            
+            subgroup.forEach((item, indexInSubgroup) => {
+              const resultDiv = createResultDiv(item, inputs, currentRank);
+              resultsDiv.appendChild(resultDiv);
+            });
+            
+            // 只有当下一个子组与当前子组不同时才增加排名
+            if (!isSameRank) {
+              currentRank++;
+            }
+          });
+        }
+      });
+    }
+
+    // 创建结果div
+    function createResultDiv(item, inputs, rank) {
+      const resultDiv = document.createElement('div');
+      resultDiv.className = 'result-item';
+      
+      // 添加排名徽章
+      const rankBadge = document.createElement('div');
+      rankBadge.className = `rank-badge rank-${Math.min(rank, 3)}`; // 确保排名不超过3
+      rankBadge.textContent = rank;
+      resultDiv.appendChild(rankBadge);
+      
+      const prod_density = item.prod_density !== null ? item.prod_density : item.density;
+      const prod_hardness = item.prod_hardness !== null ? item.prod_hardness : item.hardness;
+      const prod_coercivity = item.prod_coercivity !== null ? item.prod_coercivity : item.coercivity;
+      const prod_cobalt = item.prod_cobalt !== null ? item.prod_cobalt : item.cobalt;
+      const prod_strength = item.prod_strength !== null ? item.prod_strength : item.strength;
+
+      // 创建匹配摘要
+      const summaryDiv = document.createElement('div');
+      summaryDiv.className = 'match-summary';
+      
+      if (item.isPerfectMatch) {
+        summaryDiv.textContent = '🎉您的需求，我公司完全满足。';
+      } else {
+        // 构建摘要文本，只显示非零的部分
+        const summaryParts = [];
+        
+        if (item.matchCount > 0) {
+          summaryParts.push(`${item.matchCount}个属性匹配`);
+        }
+        
+        if (item.closeCount > 0) {
+          summaryParts.push(`${item.closeCount}个属性接近`);
+        }
+        
+        if (item.referenceCount > 0) {
+          summaryParts.push(`${item.referenceCount}个属性可参考`);
+        }
+        
+        // 如果没有匹配的属性，显示默认提示
+        if (summaryParts.length === 0) {
+          summaryDiv.textContent = '📋 无匹配属性，仅供参考';
+        } else {
+          summaryDiv.textContent = summaryParts.join('，');
+        }
+      }
+      
+      // 创建标题和徽章
+      const headerDiv = document.createElement('div');
+      headerDiv.className = 'result-header';
+      
+      const titleDiv = document.createElement('div');
+      titleDiv.className = 'result-title';
+      titleDiv.textContent = `${item.dept} - 牌号 ${item.brand}`;
+      
+      const badgeDiv = document.createElement('div');
+      badgeDiv.className = 'match-badge ';
+      
+      if (item.isPerfectMatch) {
+        badgeDiv.classList.add('perfect-match');
+        badgeDiv.textContent = '🎉 完全匹配';
+      } else if (item.isUsingCertified) {
+        badgeDiv.classList.add('certified');
+        badgeDiv.textContent = '📋 据鉴定数据推荐';
+      } else {
+        badgeDiv.classList.add('recommend');
+        badgeDiv.textContent = '⭐ 推荐匹配';
+      }
+      
+      headerDiv.appendChild(titleDiv);
+      headerDiv.appendChild(badgeDiv);
+      
+      // 创建属性表格
+      const tableHTML = `
+        <table class="property-table">
+          <tr>
+            <th>属性</th>
+            <th>输入值</th>
+            <th>匹配值</th>
+            <th>数据来源</th>
+            <th>匹配状态</th>
+          </tr>
+          <tr>
+            <td class="property-name">📊 密度</td>
+            <td>${inputs[0] !== null ? inputs[0] : '-'}</td>
+            <td>${prod_density !== null ? prod_density : '-'}</td>
+            <td><span class="data-source">${item.prod_density !== null ? '产品数据' : '鉴定数据'}</span></td>
+            <td class="match-status ${getStatusClass(inputs[0], prod_density, item.developingFlags[0], item.toleranceFlags[0])}">
+              ${getStatusText(inputs[0], prod_density, item.developingFlags[0], item.toleranceFlags[0])}
+            </td>
+          </tr>
+          <tr>
+            <td class="property-name">💎 硬度</td>
+            <td>${inputs[1] !== null ? inputs[1] : '-'}</td>
+            <td>${prod_hardness !== null ? prod_hardness : '-'}</td>
+            <td><span class="data-source">${item.prod_hardness !== null ? '产品数据' : '鉴定数据'}</span></td>
+            <td class="match-status ${getStatusClass(inputs[1], prod_hardness, item.developingFlags[1], item.toleranceFlags[1])}">
+              ${getStatusText(inputs[1], prod_hardness, item.developingFlags[1], item.toleranceFlags[1])}
+            </td>
+          </tr>
+          <tr>
+            <td class="property-name">🧲 矫顽磁力</td>
+            <td>${inputs[2] !== null ? inputs[2] : '-'}</td>
+            <td>${prod_coercivity !== null ? prod_coercivity : '-'}</td>
+            <td><span class="data-source">${item.prod_coercivity !== null ? '产品数据' : '鉴定数据'}</span></td>
+            <td class="match-status ${getStatusClass(inputs[2], prod_coercivity, item.developingFlags[2], item.toleranceFlags[2])}">
+              ${getStatusText(inputs[2], prod_coercivity, item.developingFlags[2], item.toleranceFlags[2])}
+            </td>
+          </tr>
+          <tr>
+            <td class="property-name">⚡ 钴磁</td>
+            <td>${inputs[3] !== null ? inputs[3] : '-'}</td>
+            <td>${prod_cobalt !== null ? prod_cobalt : '-'}</td>
+            <td><span class="data-source">${item.prod_cobalt !== null ? '产品数据' : '鉴定数据'}</span></td>
+            <td class="match-status ${getStatusClass(inputs[3], prod_cobalt, item.developingFlags[3], item.toleranceFlags[3])}">
+              ${getStatusText(inputs[3], prod_cobalt, item.developingFlags[3], item.toleranceFlags[3])}
+            </td>
+          </tr>
+          <tr>
+            <td class="property-name">🛡️ 强度</td>
+            <td>${inputs[4] !== null ? inputs[4] : '-'}</td>
+            <td>${prod_strength !== null ? prod_strength : '-'}</td>
+            <td><span class="data-source">${item.prod_strength !== null ? '产品数据' : '鉴定数据'}</span></td>
+            <td class="match-status ${getStatusClass(inputs[4], prod_strength, item.developingFlags[4], item.toleranceFlags[4])}">
+              ${getStatusText(inputs[4], prod_strength, item.developingFlags[4], item.toleranceFlags[4])}
+            </td>
+          </tr>
+        </table>
+      `;
+      
+      // 重新排列元素的顺序：先添加摘要，再添加标题和徽章，最后添加表格
+      resultDiv.appendChild(summaryDiv);
+      resultDiv.appendChild(headerDiv);
+      resultDiv.innerHTML += tableHTML;
+      
+      return resultDiv;
+    }
+
+    // 更精细的分组函数
+    function refinedGroupMatches(matches, inputs) {
+      const groups = [];
+      let currentGroup = [];
+      
+      // 首先按匹配分数进行粗略分组
+      matches.forEach((item, index) => {
+        if (index === 0) {
+          currentGroup.push(item);
+          return;
+        }
+        
+        const prevItem = matches[index-1];
+        const currentScore = item.matchScore;
+        const prevScore = prevItem.matchScore;
+        
+        // 如果分数非常接近，放在同一组
+        if (Math.abs(currentScore - prevScore) < 0.01) {
+          currentGroup.push(item);
+        } else {
+          groups.push(currentGroup);
+          currentGroup = [item];
+        }
+      });
+      
+      // 添加最后一组
+      if (currentGroup.length > 0) {
+        groups.push(currentGroup);
+      }
+      
+      return groups;
+    }
+
+    // 进一步分组函数
+    function furtherGroupMatches(group, inputs) {
+      if (group.length <= 1) return [group];
+      
+      const subgroups = [];
+      let currentSubgroup = [group[0]];
+      
+      for (let i = 1; i < group.length; i++) {
+        const currentItem = group[i];
+        const prevItem = group[i-1];
+        
+        // 检查是否可以进一步区分
+        if (canDistinguish(prevItem, currentItem, inputs)) {
+          subgroups.push(currentSubgroup);
+          currentSubgroup = [currentItem];
+        } else {
+          currentSubgroup.push(currentItem);
+        }
+      }
+      
+      subgroups.push(currentSubgroup);
+      return subgroups;
+    }
+
+    // 检查两个项目是否可以区分
+    function canDistinguish(item1, item2, inputs) {
+      // 检查每个输入属性的差异
+      for (let i = 0; i < inputs.length; i++) {
+        if (inputs[i] !== null) {
+          const diff1 = item1.diffs[i];
+          const diff2 = item2.diffs[i];
+          
+          // 如果两个项目在某个属性上的差异不同，且差异足够大，则可以区分
+          if (Math.abs(diff1 - diff2) > 0.001 && 
+              (diff1 === 0 || diff2 === 0 || Math.abs(diff1 - diff2) / Math.min(diff1, diff2) > 0.05)) {
+            return true;
+          }
+        }
+      }
+      
+      return false;
+    }
+
+    // 检查两个组是否相等
+    function areGroupsEqual(group1, group2, inputs) {
+      if (group1.length !== group2.length) return false;
+      
+      for (let i = 0; i < group1.length; i++) {
+        if (!areItemsEqual(group1[i], group2[i], inputs)) {
+          return false;
+        }
+      }
+      
+      return true;
+    }
+
+    // 检查两个项目是否相等
+    function areItemsEqual(item1, item2, inputs) {
+      // 检查匹配分数是否非常接近
+      if (Math.abs(item1.matchScore - item2.matchScore) > 0.001) return false;
+      
+      // 检查每个输入属性的差异是否相同
+      for (let i = 0; i < inputs.length; i++) {
+        if (inputs[i] !== null) {
+          const diff1 = item1.diffs[i];
+          const diff2 = item2.diffs[i];
+          
+          if (Math.abs(diff1 - diff2) > 0.001) {
+            return false;
+          }
+        }
+      }
+      
+      return true;
+    }
+
+    // 获取组的键值
+    function getGroupKey(item, inputs) {
+      let key = '';
+      
+      for (let i = 0; i < inputs.length; i++) {
+        if (inputs[i] !== null) {
+          key += `${i}:${item.diffs[i].toFixed(3)}|`;
+        }
+      }
+      
+      return key;
+    }
+
+    // 获取匹配状态的CSS类
+    function getStatusClass(input, reference, developingFlag, toleranceFlag) {
+      if (input === null) return 'status-blank';
+      if (developingFlag) return 'status-developing';
+      if (reference === null) return 'status-reference';
+      if (input === reference) return 'status-match';
+      if (toleranceFlag) return 'status-close';
+      return 'status-reference';
+    }
+
+    // 获取匹配状态的文本
+    function getStatusText(input, reference, developingFlag, toleranceFlag) {
+      if (input === null) return '';
+      if (developingFlag) return '🚧 系统正在研发';
+      if (reference === null) return '📋 参考';
+      if (input === reference) return '✅ 匹配';
+      if (toleranceFlag) return '🔍 接近';
+      return '📋 参考';
+    }
+  </script>
+</body>
+</html>
